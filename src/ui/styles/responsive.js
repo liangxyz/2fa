@@ -1045,6 +1045,7 @@ export function getResponsiveStyles() {
       backdrop-filter: blur(10px);
       border: 1px solid var(--toast-border);
       min-width: 200px;
+      max-width: min(90vw, 560px);
       text-align: center;
       font-size: 16px;
       font-weight: 500;
@@ -1057,7 +1058,10 @@ export function getResponsiveStyles() {
 
     .toast-message {
       flex: 1;
-      white-space: nowrap;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      line-height: 1.5;
     }
 
     /* 响应式设计 */
@@ -1241,6 +1245,13 @@ export function getResponsiveStyles() {
       font-size: 13px !important;
       min-width: auto !important;
       width: auto !important;
+    }
+
+    /* P1.6 手机端 btn-compact 至少 44px 高，保证触控 */
+    @media (max-width: 768px) {
+      .btn-compact {
+        min-height: 44px !important;
+      }
     }
 
     .scanner-hint {
