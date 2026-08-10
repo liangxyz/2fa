@@ -1,6 +1,6 @@
 {
   "name": "2fa",
-  "version": "1.5.0",
+  "version": "1.7.1",
   "type": "module",
   "private": true,
   "description": "2FA - OTP Generator using Cloudflare Workers",
@@ -22,6 +22,10 @@
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write \"src/**/*.js\"",
     "format:check": "prettier --check \"src/**/*.js\"",
+    "release:patch": "node scripts/release.js patch",
+    "release:minor": "node scripts/release.js minor",
+    "release:major": "node scripts/release.js major",
+    "release:sync": "node scripts/release.js --sync",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -34,7 +38,6 @@
     ]
   },
   "dependencies": {
-    "@sentry/cloudflare": "^10.22.0",
     "aws4fetch": "^1.0.20",
     "qrcode": "^1.5.3"
   },

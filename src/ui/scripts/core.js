@@ -94,19 +94,25 @@ export function getCoreCode() {
 
     // 页面加载时获取密钥列表
     document.addEventListener('DOMContentLoaded', function() {
+        initializeTrustedClock();
         // 先检查认证状态
         if (checkAuth()) {
           loadSecrets();
           // Cookie 过期由浏览器自动管理，无需定时检查
         }
         initTheme();
-        
+
         // 恢复用户的排序选择
         restoreSortPreference();
 
         // 排序 popover 外部点击 / Escape 关闭
         if (typeof initSortDropdownOutsideClose === 'function') {
           initSortDropdownOutsideClose();
+        }
+
+        // 初始化 FAB 拖拽并还原上次保存的位置
+        if (typeof initFABDrag === 'function') {
+          initFABDrag();
         }
 
         // 页面加载后立即刷新所有OTP，确保时间同步
@@ -124,6 +130,7 @@ export function getCoreCode() {
     async function loadSecrets() {
       const CACHE_KEY = '2fa-secrets-cache';
       try {
+        await ensureServerTimeSynchronized();
         const response = await authenticatedFetch('/api/secrets');
 
         if (response.status === 401) {
@@ -820,7 +827,7 @@ export function getCoreCode() {
         return;
       }
 
-      const currentTime = Math.floor(Date.now() / 1000);
+      const currentTime = Math.floor(getCorrectedNowMs() / 1000);
       
       secrets.forEach(secret => {
         // 只检查TOTP类型
