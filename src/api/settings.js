@@ -4,10 +4,15 @@
 
 import { createJsonResponse, createErrorResponse } from '../utils/response.js';
 import { getLogger } from '../utils/logger.js';
-import { checkRateLimit, getClientIdentifier, createRateLimitResponse, RATE_LIMIT_PRESETS } from '../utils/rateLimit.js';
+import {
+	checkRateLimit,
+	scopedRateLimitKey,
+	getClientIdentifier,
+	createRateLimitResponse,
+	RATE_LIMIT_PRESETS,
+} from '../utils/rateLimit.js';
 import { ValidationError, errorToResponse, logError } from '../utils/errors.js';
 import {
-	DEFAULT_SETTINGS,
 	getSettings,
 	KV_SETTINGS_KEY,
 	sanitizeDefaultExportFormat,
@@ -85,6 +90,7 @@ export async function handleGetSettings(request, env) {
 	try {
 		const settings = await getSettings(env, {
 			onInvalid: createSettingsFallbackHandler(logger, '设置数据已损坏，已回退默认配置'),
+			omitUnsetLanguage: true,
 		});
 		return createJsonResponse(settings, 200, request);
 	} catch (error) {
@@ -101,7 +107,7 @@ export async function handleSaveSettings(request, env) {
 
 	try {
 		const clientIP = getClientIdentifier(request, 'ip');
-		const rateLimitInfo = await checkRateLimit(clientIP, env, RATE_LIMIT_PRESETS.sensitive);
+		const rateLimitInfo = await checkRateLimit(scopedRateLimitKey('settings', clientIP), env, RATE_LIMIT_PRESETS.sensitive);
 
 		if (!rateLimitInfo.allowed) {
 			logger.warn('保存设置速率限制超出', {
@@ -115,6 +121,7 @@ export async function handleSaveSettings(request, env) {
 		const body = await request.json();
 		const current = await getSettings(env, {
 			onInvalid: createSettingsFallbackHandler(logger, '设置数据已损坏，保存时将使用默认配置覆盖'),
+			omitUnsetLanguage: true,
 		});
 
 		const updated = { ...current };
@@ -145,7 +152,7 @@ export async function handleSaveSettings(request, env) {
 			{
 				success: true,
 				message: '设置已保存',
-				settings: { ...DEFAULT_SETTINGS, ...updated },
+				settings: updated,
 			},
 			200,
 			request,

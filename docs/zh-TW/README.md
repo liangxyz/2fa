@@ -2,19 +2,35 @@
 
 基於 Cloudflare Workers 的兩步驟驗證金鑰管理系統。免費部署、全球加速、支援 PWA 離線使用。
 
-**[简体中文](README.md)** · **[English](README_EN.md)**
+<!-- README_LANGUAGE_NAV_START -->
 
-![Version](https://img.shields.io/badge/version-1.9.0-blue)
+[简体中文](../../README.md) · **[繁體中文](README.md)** · [English](../en/README.md) · [日本語](../ja/README.md) · [한국어](../ko/README.md) ·
+[Deutsch](../de/README.md) · [Français](../fr/README.md) · [Español](../es/README.md) · [Português (Brasil)](../pt-BR/README.md) · [Italiano](../it/README.md) ·
+[Русский](../ru/README.md) · [Türkçe](../tr/README.md) · [Bahasa Indonesia](../id/README.md) · [Tiếng Việt](../vi/README.md) · [ไทย](../th/README.md)
+
+<!-- README_LANGUAGE_NAV_END -->
+
+![Version](https://img.shields.io/github/package-json/v/wuzf/2fa?label=version)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Platform](https://img.shields.io/badge/platform-Cloudflare%20Workers-orange)
 
-**主要特色：** TOTP/HOTP 驗證碼自動產生 · QR Code 掃描/圖片識別/貼上截圖/拖曳圖片新增金鑰 · AES-GCM 256 位元加密儲存 · 從 Google Authenticator、Aegis、2FAS、Bitwarden 等應用程式批次匯入 · 多格式匯出（TXT/JSON/CSV/HTML/Google 轉移 QR Code） · 自動備份與還原 · WebDAV/S3/OneDrive/Google Drive 遠端備份同步 · 帳號安全/同步/偏好設定 · 多國語言支援（繁體中文 / 簡體中文 / English，依瀏覽器自動判定） · 淺色/深色/跟隨系統主題 · Fluent 2 風格響應式介面
+**主要特色：** TOTP/HOTP 驗證碼自動產生 · QR Code 掃描/圖片識別/貼上截圖/拖曳圖片新增金鑰 · AES-GCM 256 位元加密儲存 · 從 Google Authenticator、Aegis、2FAS、Bitwarden 等應用程式批次匯入 · 多格式匯出（TXT/JSON/CSV/HTML/Google 轉移 QR Code） · 自動備份與還原 · WebDAV/S3/OneDrive/Google Drive 遠端備份同步 · 帳號安全/同步/偏好設定 · 專案全模組 15 語支援（自動判定 / 手動切換） · 淺色/深色/跟隨系統主題 · Fluent 2 風格響應式介面
+
+網頁、瀏覽器擴充功能、初始設定、公開 OTP 頁面、API 提示與備份文件統一支援：簡體中文、繁體中文、English、日本語、한국어、Deutsch、Français、Español、Português (Brasil)、Italiano、Русский、Türkçe、Bahasa Indonesia、Tiếng Việt、ไทย。介面可依瀏覽器自動判定或手動選擇，未支援的瀏覽器語言使用英文；不同語言匯出的 CSV/HTML 備份可互相匯入。
+
+## 🧩 瀏覽器擴充功能
+
+安裝 2FA 驗證助手：**[Chrome Web Store](https://chromewebstore.google.com/detail/2fa-%E9%AA%8C%E8%AF%81%E5%8A%A9%E6%89%8B/lifeiloiefdlbohelpjajdbopeocalhl)** · **[Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/kmchncmoddhdlbpfoejeahdjhieghklm)** · **[Firefox Add-ons](https://addons.mozilla.org/zh-CN/firefox/addon/2fa-%E9%AA%8C%E8%AF%81%E5%8A%A9%E6%89%8B/)**。
+
+請使用對應瀏覽器開啟安裝連結。安裝後，在擴充功能設定中填寫自己的 2FA 實例網址，並在同一瀏覽器中登入實例，即可查看、複製及填入 TOTP 驗證碼；自動填入按網站授權，可在首次填入時一併啟用。擴充功能需搭配已部署的本專案使用，介面支援上述 15 種語言。Firefox 桌面版與 Android 版均要求 153 及以上版本，並使用一般分頁；不支援桌面容器分頁及兩端的隱私分頁。Firefox 附加元件商店自 1.2.0 版起支援 Android，尚未完成 Firefox Android 實機驗證。Firefox Android 不提供擴充功能快捷鍵。Edge Android 已有使用者實測可用。
+
+[安裝與使用指南](../BROWSER_EXTENSION.md) · [Chrome / Edge 隱私權政策](../../extension/PRIVACY.md) · [Firefox 隱私權政策](../../extension/PRIVACY_FIREFOX.md)（簡體中文）
 
 ## 📸 截圖預覽
 
-|                    桌面端                     |                    平板端                    |                    手機端                    |
-| :-------------------------------------------: | :------------------------------------------: | :------------------------------------------: |
-| ![桌面端](docs/images/screenshot-desktop.png) | ![平板端](docs/images/screenshot-tablet.png) | ![手機端](docs/images/screenshot-mobile.png) |
+|                   桌面端                    |                   平板端                   |                   手機端                   |
+| :-----------------------------------------: | :----------------------------------------: | :----------------------------------------: |
+| ![桌面端](../images/screenshot-desktop.png) | ![平板端](../images/screenshot-tablet.png) | ![手機端](../images/screenshot-mobile.png) |
 
 ## 🚀 快速部署
 
@@ -66,6 +82,14 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 
 工作流程會自動保留你目前儲存庫裡的 Worker 名稱、KV 綁定與常見部署設定，並重新部署**同一個 Worker**。儲存庫中已有的工作流程檔案也會一併保留。
 
+> **沒有 Sync Upstream 入口時**：一鍵部署匯入儲存庫時不會複製 `.github/workflows`，所以新建立的儲存庫裡沒有這個工作流程，第一次升級前要先補上。把下面連結裡的 `OWNER/REPO` 換成你的儲存庫（例如 `alice/2fa`）後在瀏覽器開啟，GitHub 會填好檔名和內容，點選 **Commit changes** 即可：
+>
+> ```text
+> https://github.com/OWNER/REPO/new/main?filename=.github/workflows/sync-upstream.yml&value=%23%20Save%20as%20.github%2Fworkflows%2Fsync-upstream.yml%20in%20your%20repository.%0A%23%20The%20upgrade%20steps%20come%20from%20wuzf%2F2fa%2C%20so%20this%20file%20never%20needs%20updating.%0Aname%3A%20Sync%20Upstream%0A%0Aon%3A%0A%20%20workflow_dispatch%3A%0A%20%20%20%20inputs%3A%0A%20%20%20%20%20%20upstream_ref%3A%0A%20%20%20%20%20%20%20%20description%3A%20Upstream%20branch%20or%20tag%20to%20sync%0A%20%20%20%20%20%20%20%20required%3A%20false%0A%20%20%20%20%20%20%20%20default%3A%20main%0A%0Apermissions%3A%0A%20%20contents%3A%20write%0A%0Ajobs%3A%0A%20%20sync%3A%0A%20%20%20%20uses%3A%20wuzf%2F2fa%2F.github%2Fworkflows%2Fsync-upstream.yml%40main%0A%20%20%20%20with%3A%0A%20%20%20%20%20%20upstream_ref%3A%20%24%7B%7B%20inputs.upstream_ref%20%7D%7D%0A
+> ```
+>
+> 也可以手動新增 `.github/workflows/sync-upstream.yml`，內容複製自 <https://github.com/wuzf/2fa/blob/main/.github/sync-upstream-entry.yml>。這個入口只有十幾行，升級步驟由上游提供，以後不必再更新它。之後依照上面步驟升級。
+
 ---
 
 ## 📖 使用指南
@@ -87,7 +111,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 - **搜尋**：頂部搜尋框依服務名稱或帳號即時搜尋
 - **智慧聚合**：預設依服務系列自動分組，同一服務的多個帳號彙整在一起，亦可切換為全平鋪
 - **排序**：依新增時間或名稱排序
-- **多國語言**：懸浮按鈕 → **設定 → 偏好設定 → 顯示語言**，支援繁體中文、簡體中文、English 或跟隨瀏覽器
+- **多國語言**：懸浮按鈕 → **設定 → 偏好設定 → 顯示語言**，支援上述 15 種語言或跟隨瀏覽器
 - **主題**：懸浮按鈕 → **設定 → 偏好設定 → 主題模式**，選擇淺色、深色或跟隨系統
 
 ### 批次匯入
@@ -160,4 +184,4 @@ TOTP 網頁同時顯示目前與下一期驗證碼，均可點選複製，到期
 
 ## 📄 授權條款
 
-本專案採用 [MIT License](LICENSE) 開源授權。
+本專案採用 [MIT License](../../LICENSE) 開源授權。
